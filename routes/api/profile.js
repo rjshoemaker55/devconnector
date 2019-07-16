@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-console */
 const express = require('express');
 
@@ -11,7 +12,6 @@ const User = require('../../models/User');
 // @route   GET api/profile/me
 // @desc    Get current user's profile
 // @access  Private
-// eslint-disable-next-line consistent-return
 router.get('/me', auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.user.id })
@@ -40,7 +40,6 @@ router.post('/', [auth, [
     .isEmpty(),
 ],
 ],
-// eslint-disable-next-line consistent-return
 async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -103,6 +102,63 @@ async (req, res) => {
     res.json(profile);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   GET api/profile
+// @desc    Get all profiles
+// @access  Public
+router.get('/', async (req, res) => {
+  try {
+    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+    res.json(profiles);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   GET api/profile/user/:user_id
+// @desc    Get profile by id
+// @access  Public
+router.get('/user/:user_id', async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.params.user_id }).populate('user', ['name', 'avatar']);
+    if (!profile) return res.status(400).send('Profile not found.');
+
+    res.json(profile);
+  } catch (err) {
+    console.log(err.message);
+
+    if (err.kind === 'ObjectId') {
+      return res.status(400).json({ msg: 'Profile not found. ' });
+    }
+
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   DELETE api/profile
+// @desc    Delete profile, user and posts
+// @access  Private
+router.delete('/', auth, async (req, res) => {
+  try {
+    // @todo - remove users posts
+
+    // Remove profile
+    await Profile.findOneAndRemove({ user: req.user.id });
+    // Remove user
+    await User.findOneAndRemove({ _id: req.user.id });
+
+    res.json({ msg: 'User deleted. ' });
+  } catch (err) {
+    console.log(err.message);
+
+    if (err.kind === 'ObjectId') {
+      return res.status(400).json({ msg: 'Profile not found. ' });
+    }
+
     res.status(500).send('Server error');
   }
 });
