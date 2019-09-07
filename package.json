@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server",
-    "server": "nodemon server"
+    "server": "nodemon server",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"yarn client\" \"yarn server\""
   },
   "repository": "git@github.com:rjshoemaker55/devconnector.git",
   "author": "RJ Shoemaker",
@@ -18,15 +20,11 @@
     "gravatar": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.6.4",
+    "node": "^12.9.1",
     "request": "^2.88.0"
   },
   "devDependencies": {
     "concurrently": "^4.1.1",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb": "^17.1.1",
-    "eslint-plugin-import": "^2.18.0",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.14.2",
     "nodemon": "^1.19.1"
   }
 }
