@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 // Redux
 import { connect } from 'react-redux';
@@ -69,6 +69,6 @@ Login.propTypes = {
 
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated
-})
+});
 
-export default connect(null, { login })(Login); 
+export default connect(mapStateToProps, { login })(Login); 
