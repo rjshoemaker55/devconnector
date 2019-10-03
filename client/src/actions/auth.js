@@ -10,7 +10,6 @@ import {
   LOGOUT
 } from './types';
 import setAuthToken from '../utils/setAuthToken';
-import { userInfo } from 'os';
 
 // Load User
 export const loadUser = () => async dispatch => {
@@ -68,7 +67,6 @@ export const register = ({ name, email, password }) => async dispatch => {
 
 // Login User
 export const login = (email, password) => async dispatch => {
-  console.log('hit register in auth.js (action)')
   const config = {
     headers: {
       'Content-Type': 'application/json'
